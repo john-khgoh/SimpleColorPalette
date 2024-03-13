@@ -16,8 +16,12 @@
 
 package com.example.colorpickerdemo
 
+import android.annotation.SuppressLint
+import android.graphics.Color.colorToHSV
 import android.graphics.Color.parseColor
+import android.graphics.Color.toArgb
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.LocalTextStyle
@@ -89,15 +93,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-
-/**
- * Demo that shows picking a color from a color wheel, which then dynamically updates
- * the color of a [TopAppBar]. This pattern could also be used to update the value of a
- * Colors, updating the overall theme for an application.
- */
+import androidx.graphics.shapes.CornerRounding
+import androidx.graphics.shapes.RoundedPolygon
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +117,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ColorPickerDialog()
+                    ColorPickerDialog(uiViewModel = UiViewModel("#000000"))
+                    //ColorPickerDemo()
                 }
             }
 
@@ -121,41 +129,74 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun ColorPickerDialogSample() {
-    ColorPickerDialog()
+    ColorPickerDialog(uiViewModel = UiViewModel("#000000"))
 }
 
+data class UiViewModel(var selectedColorString: String): ViewModel() {
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+}
+
+data class UiState constructor(
+    var selectedColor: MutableState<String> = mutableStateOf("#000000")
+)
+
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun Circle(
     color: Color,
-    onClick: () -> Unit,
+    uiViewModel: UiViewModel,
     size: Int,
+    isDisplayOnly: Boolean = false
 )
 {
-    //val shape = CircleShape
-    val shape = RoundedCornerShape(20.dp,20.dp,20.dp,20.dp)
-    Box(
-        modifier = Modifier
-            .background(color = color,shape = shape)
-            .clip(shape)
-            .size(size.dp)
-            .clickable { onClick.invoke()}
-    )
-    Box(
-        modifier = Modifier
-            .padding(5.dp)
-    )
+    val shape = CircleShape
+    //val shape = RoundedCornerShape(20.dp,20.dp,20.dp,20.dp)
+    if(!isDisplayOnly) {
+        Box(
+            modifier = Modifier
+                .background(color = color, shape = shape)
+                .clip(shape)
+                .size(size.dp)
+                .clickable {
+                    //Formula to reformat the color Argb value to hexadecimal
+                    uiViewModel.uiState.value.selectedColor.value =
+                        "#" + String
+                            .format("#%08X", color.toArgb())
+                            .takeLast(6)
+                    Log.d("fisk", uiViewModel.uiState.value.selectedColor.value)
+                }
+
+        )
+        Box(
+            modifier = Modifier
+                .padding(5.dp)
+        )
+    }
+    else {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = Color(parseColor(uiViewModel.uiState.value.selectedColor.value)),
+                    shape = shape
+                )
+                .clip(shape)
+                .size(size.dp)
+        )
+    }
 }
 
 @Composable
-fun ColorPickerDialog() {
+fun ColorPickerDialog(uiViewModel: UiViewModel) {
     var circleSize = 40
+    var onClick = { uiViewModel.uiState.value.selectedColor.value }
     Dialog(onDismissRequest = {}) {
 
         Card(
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier
                 .background(color = Color.White)
-                .height(500.dp)
+                .height(600.dp)
                 .width(450.dp)
         ) {
 
@@ -165,6 +206,16 @@ fun ColorPickerDialog() {
                         .padding(20.dp,5.dp)
                 ) {
                     Text("Color Picker", fontSize = 20.sp)
+                    Box(
+                        modifier = Modifier
+                            .padding(85.dp,0.dp,0.dp,0.dp)
+                    )
+                    Circle(
+                        color = Color.Unspecified,
+                        uiViewModel = uiViewModel,
+                        size = circleSize,
+                        isDisplayOnly = true
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -172,27 +223,27 @@ fun ColorPickerDialog() {
                 ) {
                     Circle(
                         color = Color(parseColor("#CF0000")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#F34334")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#E71E62")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#9B27AE")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#663AB5")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                 }
@@ -202,27 +253,27 @@ fun ColorPickerDialog() {
                 ) {
                     Circle(
                         color = Color(parseColor("#3D51B4")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#01A9F2")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#00BCD2")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#009687")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#4BAF4F")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                 }
@@ -232,27 +283,27 @@ fun ColorPickerDialog() {
                 ) {
                     Circle(
                         color = Color(parseColor("#89C348")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#CCDD39")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#FFEC3A")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#FEC106")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#795547")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                 }
@@ -262,45 +313,44 @@ fun ColorPickerDialog() {
                 ) {
                     Circle(
                         color = Color(parseColor("#FFFFFF")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#9E9E9E")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#5F7D88")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#415157")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(parseColor("#000000")),
-                        onClick = { },
+                        uiViewModel = uiViewModel,
                         size = circleSize,
                     )
+                }
+                Row() {
+                    ColorPicker(onColorChange = {
+                        uiViewModel.uiState.value.selectedColor.value =
+                        "#" + String
+                            .format("#%08X", it.toArgb())
+                            .takeLast(6)
+                    })
                 }
             }
         }
     }
-    /*
-        Canvas(
-            modifier = Modifier
-                .height(500.dp)
-                .width(500.dp)
-                .background(color= Color.White)
-        ) {
-            //drawCircle(color = Color.Red,radius = 30.0f,center = Offset(100f,100f))
-
-        } */
 }
 
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorPickerDemo() {
@@ -311,7 +361,7 @@ fun ColorPickerDemo() {
             ColorPicker(onColorChange = { primary = it })
         }
     }
-}
+} */
 
 @Composable
 private fun ColorPicker(onColorChange: (Color) -> Unit) {
