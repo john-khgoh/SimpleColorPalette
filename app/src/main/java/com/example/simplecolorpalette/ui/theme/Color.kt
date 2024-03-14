@@ -1,4 +1,4 @@
-package com.example.colorpickerdemo.ui.theme
+package com.example.simplecolorpalette.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

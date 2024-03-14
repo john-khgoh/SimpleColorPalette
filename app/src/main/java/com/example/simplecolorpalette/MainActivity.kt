@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.example.colorpickerdemo
+package com.example.simplecolorpalette
 
 import android.annotation.SuppressLint
-import android.graphics.Color.colorToHSV
 import android.graphics.Color.parseColor
-import android.graphics.Color.toArgb
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.TopAppBar
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
@@ -53,11 +49,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,22 +79,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.view.WindowCompat
-import com.example.colorpickerdemo.ui.theme.ColorPickerDemoTheme
+import com.example.simplecolorpalette.ui.theme.ColorPickerDemoTheme
 import java.util.Locale
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.absoluteOffset
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.graphics.shapes.CornerRounding
-import androidx.graphics.shapes.RoundedPolygon
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -117,19 +106,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ColorPickerDialog(uiViewModel = UiViewModel("#000000"))
+
+                    //ColorPickerDialog(uiViewModel = UiViewModel("#000000"))
                     //ColorPickerDemo()
+                    MainMenu(uiViewModel = UiViewModel("#000000"))
                 }
             }
 
         }
     }
-}
-
-@Preview
-@Composable
-fun ColorPickerDialogSample() {
-    ColorPickerDialog(uiViewModel = UiViewModel("#000000"))
 }
 
 data class UiViewModel(var selectedColorString: String): ViewModel() {
@@ -138,8 +123,61 @@ data class UiViewModel(var selectedColorString: String): ViewModel() {
 }
 
 data class UiState constructor(
-    var selectedColor: MutableState<String> = mutableStateOf("#000000")
+    var selectedColor: MutableState<String> = mutableStateOf("#000000"),
+    var openColorDialog: MutableState<Boolean> = mutableStateOf(false)
 )
+
+@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+fun MainMenu(
+    uiViewModel: UiViewModel
+) {
+    //var openColorDialog = remember {mutableStateOf(false)}
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                //.fillMaxHeight(0.2f)
+        ) {
+            Button(onClick = { uiViewModel.uiState.value.openColorDialog.value = true }) {
+                Text("Color Picker")
+            }
+            when {
+                uiViewModel.uiState.value.openColorDialog.value -> {
+                    ColorPickerDialog(
+                        uiViewModel = uiViewModel
+                    )
+                }
+            }
+        }
+        Row(
+            modifier = Modifier
+        ) {
+            Button(onClick = {  }) {
+                Text("Button 2")
+            }
+        }
+        Row(
+            modifier = Modifier
+        ) {
+            Button(onClick = {  }) {
+                Text("Button 3")
+            }
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun ColorPickerDialogSample() {
+    ColorPickerDialog(
+        uiViewModel = UiViewModel("#000000")
+    )
+}
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -164,7 +202,6 @@ fun Circle(
                         "#" + String
                             .format("#%08X", color.toArgb())
                             .takeLast(6)
-                    Log.d("fisk", uiViewModel.uiState.value.selectedColor.value)
                 }
 
         )
@@ -190,25 +227,36 @@ fun Circle(
 fun ColorPickerDialog(uiViewModel: UiViewModel) {
     var circleSize = 40
     var onClick = { uiViewModel.uiState.value.selectedColor.value }
-    Dialog(onDismissRequest = {}) {
-
+    Dialog(onDismissRequest = {uiViewModel.uiState.value.openColorDialog.value = false}) {
         Card(
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier
                 .background(color = Color.White)
                 .height(600.dp)
-                .width(450.dp)
+                //.width(420.dp)
         ) {
-
             Column() {
                 Row(
                     modifier = Modifier
-                        .padding(20.dp,5.dp)
+                        //.padding(20.dp,20.dp)
+                        .padding(20.dp,20.dp,10.dp,10.dp)
                 ) {
-                    Text("Color Picker", fontSize = 20.sp)
+                    Image(
+                        painter = painterResource(R.drawable.close_24px),
+                        contentDescription = null,
+                        modifier = Modifier
+                            //.padding(0.dp,5.dp,0.dp,0.dp)
+                            .size(32.dp)
+                            .clickable { uiViewModel.uiState.value.openColorDialog.value = false }
+                    )
                     Box(
                         modifier = Modifier
-                            .padding(85.dp,0.dp,0.dp,0.dp)
+                            .padding(20.dp,0.dp,0.dp,0.dp)
+                    )
+                    Text("Color Picker", fontSize = 22.sp)
+                    Box(
+                        modifier = Modifier
+                            .padding(20.dp,0.dp,0.dp,0.dp)
                     )
                     Circle(
                         color = Color.Unspecified,
@@ -220,6 +268,7 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                 Row(
                     modifier = Modifier
                         .padding(20.dp,10.dp)
+                        //.padding(20.dp,20.dp,10.dp,10.dp)
                 ) {
                     Circle(
                         color = Color(parseColor("#CF0000")),
@@ -250,6 +299,7 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                 Row(
                     modifier = Modifier
                         .padding(20.dp,10.dp)
+                        //.padding(20.dp,20.dp,10.dp,10.dp)
                 ) {
                     Circle(
                         color = Color(parseColor("#3D51B4")),
@@ -280,6 +330,7 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                 Row(
                     modifier = Modifier
                         .padding(20.dp,10.dp)
+                        //.padding(20.dp,20.dp,10.dp,10.dp)
                 ) {
                     Circle(
                         color = Color(parseColor("#89C348")),
@@ -310,6 +361,7 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                 Row(
                     modifier = Modifier
                         .padding(20.dp,10.dp)
+                        //.padding(20.dp,20.dp,10.dp,10.dp)
                 ) {
                     Circle(
                         color = Color(parseColor("#FFFFFF")),
@@ -368,10 +420,11 @@ private fun ColorPicker(onColorChange: (Color) -> Unit) {
     BoxWithConstraints(
         Modifier
             .padding(50.dp)
-            .fillMaxSize()
+            //.fillMaxSize()
             .aspectRatio(1f)
     ) {
-        val diameter = constraints.maxWidth
+        //val diameter = constraints.maxWidth
+        val diameter = 600
         var position by remember { mutableStateOf(Offset.Zero) }
         val colorWheel = remember(diameter) { ColorWheel(diameter) }
 

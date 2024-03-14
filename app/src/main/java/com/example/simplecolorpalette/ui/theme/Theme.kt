@@ -1,4 +1,4 @@
-package com.example.colorpickerdemo.ui.theme
+package com.example.simplecolorpalette.ui.theme
 
 import android.app.Activity
 import android.os.Build

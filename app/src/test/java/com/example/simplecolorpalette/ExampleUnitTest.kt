@@ -1,4 +1,4 @@
-package com.example.colorpickerdemo
+package com.example.simplecolorpalette
 
 import org.junit.Test
 

@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ColorPickerDemo"
+rootProject.name = "SimpleColorPalette"
 include(":app")
  
