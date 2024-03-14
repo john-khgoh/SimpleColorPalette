@@ -25,13 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
+/*
 @Preview
 @Composable
 fun ColorPickerDialogSample() {
     ColorPickerDialog(
         uiViewModel = UiViewModel("#000000")
     )
-}
+} */
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -52,10 +53,10 @@ fun Circle(
                 .size(size.dp)
                 .clickable {
                     //Formula to reformat the color Argb value to hexadecimal
-                    uiViewModel.uiState.value.selectedColor.value =
-                        "#" + String
-                            .format("#%08X", color.toArgb())
-                            .takeLast(6)
+                    //uiViewModel.uiState.value.selectedColor.value =
+                    val tempColor = "#" + String.format("#%08X", color.toArgb()).takeLast(6)
+                    uiViewModel.uiState.value.fontColor.value = tempColor
+
                 }
 
         )
@@ -68,7 +69,8 @@ fun Circle(
         Box(
             modifier = Modifier
                 .background(
-                    color = Color(android.graphics.Color.parseColor(uiViewModel.uiState.value.selectedColor.value)),
+                    //color = Color(android.graphics.Color.parseColor(uiViewModel.uiState.value.selectedColor.value)),
+                    color = Color(android.graphics.Color.parseColor(uiViewModel.uiState.value.fontColor.value)),
                     shape = shape
                 )
                 .clip(shape)
@@ -80,7 +82,8 @@ fun Circle(
 @Composable
 fun ColorPickerDialog(uiViewModel: UiViewModel) {
     var circleSize = 40
-    var onClick = { uiViewModel.uiState.value.selectedColor.value }
+    //var onClick = { uiViewModel.uiState.value.selectedColor.value }
+    //var onClick = { uiViewModel.uiState.value.fontColor }
     Dialog(onDismissRequest = {uiViewModel.uiState.value.openColorDialog.value = false}) {
         Card(
             shape = RoundedCornerShape(32.dp),
@@ -246,10 +249,10 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                 }
                 Row() {
                     ColorPicker(onColorChange = {
-                        uiViewModel.uiState.value.selectedColor.value =
-                            "#" + String
-                                .format("#%08X", it.toArgb())
-                                .takeLast(6)
+                        //uiViewModel.uiState.value.selectedColor.value =
+                        val tempColor = "#" + String.format("#%08X", it.toArgb()).takeLast(6)
+                        uiViewModel.uiState.value.fontColor.value = tempColor
+                        uiViewModel.saveFontColor(tempColor)
                     })
                 }
             }
