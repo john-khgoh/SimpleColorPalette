@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -19,9 +20,8 @@ import kotlinx.coroutines.launch
 data class UiViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ): ViewModel() {
-    //private val _uiState = MutableStateFlow(UiState())
-    //val uiState: StateFlow<UiState> = _uiState.asStateFlow()
-
+    private val _uiState = MutableStateFlow(UiState2())
+    val uiState2: StateFlow<UiState2> = _uiState.asStateFlow()
 
     val uiState: StateFlow<UiState> = userPreferencesRepository.fontColor.map{ fontColorValue ->
         UiState(fontColor = mutableStateOf(fontColorValue))
@@ -52,5 +52,7 @@ data class UiState(
     //var selectedColor: MutableState<String> = mutableStateOf("#000000"),
     //var fontColor: MutableState<String> = mutableStateOf("#000000"),
     var fontColor: MutableState<String> = mutableStateOf("#000000"),
+)
+data class UiState2(
     var openColorDialog: MutableState<Boolean> = mutableStateOf(false)
 )

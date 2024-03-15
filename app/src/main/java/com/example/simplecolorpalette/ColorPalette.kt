@@ -91,8 +91,8 @@ fun ColorPickerDialog(
     //var onClick = { uiViewModel.uiState.value.selectedColor.value }
     //var onClick = { uiViewModel.uiState.value.fontColor }
     Dialog(onDismissRequest = {
-        uiViewModel.uiState.value.openColorDialog.value = false
-        //uiState.openColorDialog.value = false
+        uiViewModel.uiState2.value.openColorDialog.value = false
+
         }) {
         Card(
             shape = RoundedCornerShape(32.dp),
@@ -130,8 +130,7 @@ fun ColorPickerDialog(
                             //.padding(0.dp,5.dp,0.dp,0.dp)
                             .size(32.dp)
                             .clickable {
-                                uiViewModel.uiState.value.openColorDialog.value = false
-                                //uiState.openColorDialog.value = false
+                                uiViewModel.uiState2.value.openColorDialog.value = false
                             }
                     )
 

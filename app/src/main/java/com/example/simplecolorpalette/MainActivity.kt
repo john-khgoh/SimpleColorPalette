@@ -130,11 +130,13 @@ fun MainScreen(
             modifier = Modifier
                 //.fillMaxHeight(0.2f)
         ) {
-            Button(onClick = { uiViewModel.uiState.value.openColorDialog.value = true }) {
+            Button(onClick = {
+                uiViewModel.uiState2.value.openColorDialog.value = true
+            }) {
                 Text("Color Picker")
             }
             when {
-                uiViewModel.uiState.value.openColorDialog.value -> {
+                uiViewModel.uiState2.value.openColorDialog.value -> {
                     ColorPickerDialog(
                         uiViewModel = uiViewModel,
                         uiState = uiState
