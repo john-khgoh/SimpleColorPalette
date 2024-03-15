@@ -1,5 +1,6 @@
 package com.example.simplecolorpalette
 
+import android.util.Log
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
@@ -73,11 +74,12 @@ fun ColorPickerDemo() {
 fun ColorPicker(onColorChange: (Color) -> Unit) {
     BoxWithConstraints(
         Modifier
-            .padding(50.dp)
+            //.padding(50.dp)
+            .padding(30.dp)
             //.fillMaxSize()
             .aspectRatio(1f)
     ) {
-        //val diameter = constraints.maxWidth
+        val multiplier = (600.0 / constraints.maxWidth.toDouble())
         val diameter = 600
         var position by remember { mutableStateOf(Offset.Zero) }
         val colorWheel = remember(diameter) { ColorWheel(diameter) }
@@ -87,7 +89,7 @@ fun ColorPicker(onColorChange: (Color) -> Unit) {
             fun updateColorWheel(newPosition: Offset) {
                 // Work out if the new position is inside the circle we are drawing, and has a
                 // valid color associated to it. If not, keep the current position
-                val newColor = colorWheel.colorForPosition(newPosition)
+                val newColor = colorWheel.colorForPosition(multiplier,newPosition)
                 if (newColor.isSpecified) {
                     position = newPosition
                     onColorChange(newColor)
@@ -108,7 +110,7 @@ fun ColorPicker(onColorChange: (Color) -> Unit) {
 
         Box(Modifier.fillMaxSize()) {
             Image(modifier = inputModifier, contentDescription = null, bitmap = colorWheel.image)
-            val color = colorWheel.colorForPosition(position)
+            val color = colorWheel.colorForPosition(multiplier,position)
             if (color.isSpecified) {
                 Magnifier(visible = hasInput, position = position, color = color)
             }
@@ -286,9 +288,9 @@ private class ColorWheel(diameter: Int) {
  * @return the matching color for [position] inside [ColorWheel], or `null` if there is no color
  * or the color is partially transparent.
  */
-private fun ColorWheel.colorForPosition(position: Offset): Color {
-    val x = position.x.toInt().coerceAtLeast(0)
-    val y = position.y.toInt().coerceAtLeast(0)
+private fun ColorWheel.colorForPosition(coefficient: Double,position: Offset): Color {
+    val x = (coefficient * position.x.toInt().coerceAtLeast(0)).toInt()
+    val y = (coefficient * position.y.toInt().coerceAtLeast(0)).toInt()
     with(image.toPixelMap()) {
         if (x >= width || y >= height) return Color.Unspecified
         return this[x, y].takeIf { it.alpha == 1f } ?: Color.Unspecified
