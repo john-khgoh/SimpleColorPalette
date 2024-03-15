@@ -71,7 +71,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -118,6 +120,7 @@ fun MainScreen(
     uiViewModel: UiViewModel
 ) {
     //var openColorDialog = remember {mutableStateOf(false)}
+    var uiState = uiViewModel.uiState.collectAsState().value
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -133,7 +136,8 @@ fun MainScreen(
             when {
                 uiViewModel.uiState.value.openColorDialog.value -> {
                     ColorPickerDialog(
-                        uiViewModel = uiViewModel
+                        uiViewModel = uiViewModel,
+                        uiState = uiState
                     )
                 }
             }

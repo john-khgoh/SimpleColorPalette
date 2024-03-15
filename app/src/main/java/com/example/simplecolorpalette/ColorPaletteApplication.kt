@@ -8,9 +8,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 
 
-private const val FONT_COLOR = "#000000"
+private const val USER_PREFERENCES = "user_preferences"
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = FONT_COLOR
+    name = USER_PREFERENCES
 )
 class ColorPaletteApplication: Application() {
 

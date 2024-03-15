@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class UiViewModel(
-    //var selectedColorString: String,
     private val userPreferencesRepository: UserPreferencesRepository
 ): ViewModel() {
     //private val _uiState = MutableStateFlow(UiState())
@@ -29,7 +28,7 @@ data class UiViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = UiState(fontColor = mutableStateOf("#000000"))
+        initialValue = UiState()
     )
 
     //Store the font Color
@@ -52,6 +51,6 @@ data class UiViewModel(
 data class UiState(
     //var selectedColor: MutableState<String> = mutableStateOf("#000000"),
     //var fontColor: MutableState<String> = mutableStateOf("#000000"),
-    var fontColor: MutableState<String>,
+    var fontColor: MutableState<String> = mutableStateOf("#000000"),
     var openColorDialog: MutableState<Boolean> = mutableStateOf(false)
 )

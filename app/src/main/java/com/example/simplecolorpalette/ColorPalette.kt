@@ -39,6 +39,7 @@ fun ColorPickerDialogSample() {
 fun Circle(
     color: Color,
     uiViewModel: UiViewModel,
+    uiState: UiState,
     size: Int,
     isDisplayOnly: Boolean = false
 )
@@ -55,8 +56,9 @@ fun Circle(
                     //Formula to reformat the color Argb value to hexadecimal
                     //uiViewModel.uiState.value.selectedColor.value =
                     val tempColor = "#" + String.format("#%08X", color.toArgb()).takeLast(6)
-                    uiViewModel.uiState.value.fontColor.value = tempColor
-
+                    //uiViewModel.uiState.value.fontColor.value = tempColor
+                    uiViewModel.saveFontColor(tempColor)
+                    uiState.fontColor.value = tempColor
                 }
 
         )
@@ -70,7 +72,8 @@ fun Circle(
             modifier = Modifier
                 .background(
                     //color = Color(android.graphics.Color.parseColor(uiViewModel.uiState.value.selectedColor.value)),
-                    color = Color(android.graphics.Color.parseColor(uiViewModel.uiState.value.fontColor.value)),
+                    //color = Color(android.graphics.Color.parseColor(uiViewModel.uiState.value.fontColor.value)),
+                    color = Color(android.graphics.Color.parseColor(uiState.fontColor.value)),
                     shape = shape
                 )
                 .clip(shape)
@@ -80,11 +83,17 @@ fun Circle(
 }
 
 @Composable
-fun ColorPickerDialog(uiViewModel: UiViewModel) {
+fun ColorPickerDialog(
+    uiViewModel: UiViewModel,
+    uiState: UiState
+) {
     var circleSize = 40
     //var onClick = { uiViewModel.uiState.value.selectedColor.value }
     //var onClick = { uiViewModel.uiState.value.fontColor }
-    Dialog(onDismissRequest = {uiViewModel.uiState.value.openColorDialog.value = false}) {
+    Dialog(onDismissRequest = {
+        uiViewModel.uiState.value.openColorDialog.value = false
+        //uiState.openColorDialog.value = false
+        }) {
         Card(
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier
@@ -101,6 +110,7 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                     Circle(
                         color = Color.Unspecified,
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                         isDisplayOnly = true
                     )
@@ -119,7 +129,10 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                         modifier = Modifier
                             //.padding(0.dp,5.dp,0.dp,0.dp)
                             .size(32.dp)
-                            .clickable { uiViewModel.uiState.value.openColorDialog.value = false }
+                            .clickable {
+                                uiViewModel.uiState.value.openColorDialog.value = false
+                                //uiState.openColorDialog.value = false
+                            }
                     )
 
                 }
@@ -131,26 +144,31 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#CF0000")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#F34334")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#E71E62")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#9B27AE")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#663AB5")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                 }
@@ -162,26 +180,31 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#3D51B4")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#01A9F2")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#00BCD2")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#009687")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#4BAF4F")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                 }
@@ -193,26 +216,31 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#89C348")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#CCDD39")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#FFEC3A")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#FEC106")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#795547")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                 }
@@ -224,26 +252,31 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#FFFFFF")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#9E9E9E")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#5F7D88")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#415157")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                     Circle(
                         color = Color(android.graphics.Color.parseColor("#000000")),
                         uiViewModel = uiViewModel,
+                        uiState = uiState,
                         size = circleSize,
                     )
                 }
@@ -251,7 +284,8 @@ fun ColorPickerDialog(uiViewModel: UiViewModel) {
                     ColorPicker(onColorChange = {
                         //uiViewModel.uiState.value.selectedColor.value =
                         val tempColor = "#" + String.format("#%08X", it.toArgb()).takeLast(6)
-                        uiViewModel.uiState.value.fontColor.value = tempColor
+                        //uiViewModel.uiState.value.fontColor.value = tempColor
+                        uiState.fontColor.value = tempColor
                         uiViewModel.saveFontColor(tempColor)
                     })
                 }
