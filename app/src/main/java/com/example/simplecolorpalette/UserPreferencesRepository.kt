@@ -19,18 +19,18 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
         val FONT_COLOR = stringPreferencesKey("fontColor")
     }
 
-    //Function to save preference to Data Store
-    suspend fun savePreferences(fontColor: String) {
+    //Save Font Color to Data Store
+    suspend fun saveFontColorPreferences(fontColor: String) {
         dataStore.edit { preferences ->
             preferences[FONT_COLOR] = fontColor
         }
     }
 
-    //Read preference from Data Store
+    //Read Font Color from Data Store
     val fontColor: Flow<String> = dataStore.data
         .catch {
             if(it is IOException) {
-                Log.e(TAG,"Error reading preferences.",it)
+                Log.e(TAG,"Error reading font color.",it)
             } else {
                 throw it
             }

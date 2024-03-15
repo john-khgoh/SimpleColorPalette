@@ -20,21 +20,16 @@ import kotlinx.coroutines.launch
 data class UiViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ): ViewModel() {
-    private val _uiState = MutableStateFlow(UiState2())
-    val uiState2: StateFlow<UiState2> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    val uiState: StateFlow<UiState> = userPreferencesRepository.fontColor.map{ fontColorValue ->
-        UiState(fontColor = mutableStateOf(fontColorValue))
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = UiState()
-    )
+    //Get the font color
+    val getFontColor: Flow<String> = userPreferencesRepository.fontColor
 
-    //Store the font Color
+    //Set the font Color
     fun saveFontColor(fontColor: String) {
         viewModelScope.launch {
-            userPreferencesRepository.savePreferences(fontColor)
+            userPreferencesRepository.saveFontColorPreferences(fontColor)
         }
     }
 
@@ -49,10 +44,6 @@ data class UiViewModel(
 }
 
 data class UiState(
-    //var selectedColor: MutableState<String> = mutableStateOf("#000000"),
-    //var fontColor: MutableState<String> = mutableStateOf("#000000"),
-    var fontColor: MutableState<String> = mutableStateOf("#000000"),
-)
-data class UiState2(
-    var openColorDialog: MutableState<Boolean> = mutableStateOf(false)
+    var openColorDialog: MutableState<Boolean> = mutableStateOf(false),
+    var fontColor: MutableState<String> = mutableStateOf("#000000")
 )

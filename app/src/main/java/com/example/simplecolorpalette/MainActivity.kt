@@ -120,7 +120,8 @@ fun MainScreen(
     uiViewModel: UiViewModel
 ) {
     //var openColorDialog = remember {mutableStateOf(false)}
-    var uiState = uiViewModel.uiState.collectAsState().value
+    //var uiState = uiViewModel.uiState.collectAsState().value
+    val initialFontColor = uiViewModel.getFontColor.collectAsState("#000000").value
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -131,15 +132,15 @@ fun MainScreen(
                 //.fillMaxHeight(0.2f)
         ) {
             Button(onClick = {
-                uiViewModel.uiState2.value.openColorDialog.value = true
+                uiViewModel.uiState.value.openColorDialog.value = true
             }) {
                 Text("Color Picker")
             }
             when {
-                uiViewModel.uiState2.value.openColorDialog.value -> {
+                uiViewModel.uiState.value.openColorDialog.value -> {
                     ColorPickerDialog(
                         uiViewModel = uiViewModel,
-                        uiState = uiState
+                        initialFontColor = initialFontColor
                     )
                 }
             }
