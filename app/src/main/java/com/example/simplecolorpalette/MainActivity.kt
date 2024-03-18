@@ -142,7 +142,11 @@ fun MainMenu(
             modifier = Modifier
                 //.fillMaxHeight(0.2f)
         ) {
-            Button(onClick = { uiViewModel.uiState.value.openColorDialog.value = true }) {
+            Button(onClick = { uiViewModel.uiState.value.openColorDialog.value = true },
+                modifier = Modifier
+                    .size(width=150.dp,height=60.dp)
+                    .padding(0.dp,8.dp)
+            ) {
                 Text("Color Picker")
             }
             when {
@@ -156,14 +160,22 @@ fun MainMenu(
         Row(
             modifier = Modifier
         ) {
-            Button(onClick = {  }) {
+            Button(onClick = {  },
+                modifier = Modifier
+                    .size(width=150.dp,height=60.dp)
+                    .padding(0.dp,8.dp)
+            ) {
                 Text("Button 2")
             }
         }
         Row(
             modifier = Modifier
         ) {
-            Button(onClick = {  }) {
+            Button(onClick = {  },
+                modifier = Modifier
+                    .size(width=150.dp,height=60.dp)
+                    .padding(0.dp,8.dp)
+            ) {
                 Text("Button 3")
             }
         }
