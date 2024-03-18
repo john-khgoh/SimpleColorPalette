@@ -94,12 +94,12 @@ fun ColorPickerDialog(
     //var onClick = { uiViewModel.uiState.value.fontColor }
     Dialog(onDismissRequest = {
         uiViewModel.uiState.value.openColorDialog.value = false
-
-        }) {
+        },
+    ) {
         Card(
-            shape = RoundedCornerShape(32.dp),
+            //shape = RoundedCornerShape(32.dp),
             modifier = Modifier
-                .background(color = Color.White)
+                .background(color = Color.White, RoundedCornerShape(24.dp))
                 .height(600.dp)
             //.width(420.dp)
         ) {
